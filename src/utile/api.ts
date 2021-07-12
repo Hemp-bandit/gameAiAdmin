@@ -1,7 +1,7 @@
 import axios        from 'axios';
 import { LISTTYPE } from '@/utile/cosnt';
 
-const token = localStorage.getItem( 'token' );
+const token = localStorage.getItem( 'jwt' );
 const entity = axios.create( {
   baseURL: 'http://localhost:3003/gameApi',
   timeout: 5000,
@@ -49,5 +49,13 @@ export async function updateGameInfo( params: any ) {
 }
 
 export async function searchGame( parm: any ) {
-  return await entity.post( 'game/searchGame', parm );
+  return await entity.post( '/game/searchGame', parm );
+}
+
+export async function createWord( data: any ): Promise<baseRsp> {
+  return await entity.post( '/game/createWord', { wordInfo: data } );
+}
+
+export async function updateWord( data: any ): Promise<baseRsp> {
+  return await entity.post( '/game/updateWord', { wordInfo: data } );
 }

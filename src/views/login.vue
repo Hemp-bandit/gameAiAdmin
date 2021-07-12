@@ -47,7 +47,7 @@ export default defineComponent( {
         if ( valid ) {
           try {
             const { token } = await login( this.form );
-            localStorage.setItem( 'token', token );
+            localStorage.setItem( 'jwt', token );
             await this.$router.replace( '/' );
           } catch ( e ) {
             ElMessage.error( e.message );

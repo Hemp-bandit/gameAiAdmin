@@ -44,7 +44,7 @@ const router = createRouter( {
 } );
 
 router.beforeEach( ( to, from, next ) => {
-  const token = localStorage.getItem( 'token' );
+  const token = localStorage.getItem( 'jwt' );
   if ( !token && to.fullPath !== '/login' ) {
     next( { name: 'login' } );
   }
