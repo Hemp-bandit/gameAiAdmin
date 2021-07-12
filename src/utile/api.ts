@@ -59,3 +59,7 @@ export async function createWord( data: any ): Promise<baseRsp> {
 export async function updateWord( data: any ): Promise<baseRsp> {
   return await entity.post( '/game/updateWord', { wordInfo: data } );
 }
+
+export async function queryMsgList(params:any) {
+  return await entity.post('msg/searchMsg',params)
+}
