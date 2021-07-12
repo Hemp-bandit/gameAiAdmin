@@ -2,72 +2,71 @@ import {
   createRouter,
   createWebHashHistory,
   createWebHistory,
-  RouteRecordRaw
-} from 'vue-router'
+  RouteRecordRaw,
+} from 'vue-router';
 
 const base: Array<RouteRecordRaw> = [
   {
-    path     : '/login',
-    name     : 'login',
-    component: import('@/views/login.vue')
+    path: '/login',
+    name: 'login',
+    component: import('@/views/login.vue'),
   },
   {
-    path     : '/',
-    name     : '/',
-    component: import('@/views/layout/layout.vue')
-  }
-]
+    path: '/',
+    name: '/',
+    component: import('@/views/layout/layout.vue'),
+  },
+];
 export const routes: Array<RouteRecordRaw> = [
   {
-    path     : '/project',
-    name     : '项目管理',
+    path: '/project',
+    name: '项目管理',
     component: import('@/views/layout/layout.vue'),
-    children : [
+    children: [
       {
-        path     : 'project',
-        name     : 'project',
-        component: import('@/views/project.vue')
-      }
-    ]
+        path: 'project',
+        name: 'project',
+        component: import('@/views/project.vue'),
+      },
+    ],
   },
   {
-    path     : '/wordMng',
-    name     : '词库管理',
+    path: '/wordMng',
+    name: '词库管理',
     component: import('@/views/layout/layout.vue'),
-    children : [
+    children: [
       {
-        path     : 'wordMng',
-        name     : 'wordMng',
-        component: import('@/views/wordMng.vue')
-      }
-    ]
+        path: 'wordMng',
+        name: 'wordMng',
+        component: import('@/views/wordMng.vue'),
+      },
+    ],
   },
   {
-    path     : '/msg',
-    name     : '内容管理',
+    path: '/msg',
+    name: '内容管理',
     component: import('@/views/layout/layout.vue'),
-    children : [
+    children: [
       {
-        path     : 'msg',
-        name     : 'msg',
-        component: import('@/views/msg.vue')
-      }
-    ]
-  }
-]
-const router = createRouter( {
-  history: createWebHistory( process.env.BASE_URL ),
-  routes : [ ...base, ...routes ]
-} )
+        path: 'msg',
+        name: 'msg',
+        component: import('@/views/msg.vue'),
+      },
+    ],
+  },
+];
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes: [...base, ...routes],
+});
 
-router.beforeEach( ( to, from, next ) => {
-  const token = localStorage.getItem( 'jwt' )
-  if ( !token && to.fullPath !== '/login' ) {
-    next( { name: 'login' } )
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('jwt');
+  if (!token && to.fullPath !== '/login') {
+    next({ path: '/login' });
+  } else {
+    next();
   }
-  else {
-    next()
-  }
-} )
+});
 
-export default router
+export default router;
