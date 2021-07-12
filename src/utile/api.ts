@@ -33,12 +33,9 @@ export async function login( params: {
 }
 
 export async function queryGameList(
-  offset: number,
   listtype: LISTTYPE
 ): Promise<{ data: any[]; total: number }> {
   return await entity.post( '/game/queryGameList', {
-    size: 10,
-    offset,
     listtype
   } );
 }

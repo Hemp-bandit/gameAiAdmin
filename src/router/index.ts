@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 const base: Array<RouteRecordRaw> = [
   {
@@ -11,12 +11,11 @@ const base: Array<RouteRecordRaw> = [
     name     : '/',
     component: import('@/views/layout/layout.vue')
   }
-]
+];
 export const routes: Array<RouteRecordRaw> = [
   {
     path     : '/project',
     name     : '项目管理',
-    meta     : { single: true },
     component: import('@/views/layout/layout.vue'),
     children : [
       {
@@ -25,21 +24,33 @@ export const routes: Array<RouteRecordRaw> = [
         component: import('@/views/project.vue')
       }
     ]
+  },
+  {
+    path     : '/wordMng',
+    name     : '词库管理',
+    component: import('@/views/layout/layout.vue'),
+    children : [
+      {
+        path     : 'wordMng',
+        name     : 'wordMng',
+        component: import('@/views/wordMng.vue')
+      }
+    ]
   }
-]
+];
 const router = createRouter( {
   history: createWebHistory( process.env.BASE_URL ),
   routes : [ ...base, ...routes ]
-} )
+} );
 
 router.beforeEach( ( to, from, next ) => {
-  const token = localStorage.getItem( 'token' )
+  const token = localStorage.getItem( 'token' );
   if ( !token && to.fullPath !== '/login' ) {
-    next( { name: 'login' } )
+    next( { name: 'login' } );
   }
   else {
-    next()
+    next();
   }
-} )
+} );
 
-export default router
+export default router;

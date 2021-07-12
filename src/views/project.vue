@@ -47,7 +47,6 @@
         :total="total"
     >
     </el-pagination>
-
     <el-dialog title="新增项目" v-model="showAdd">
       <el-form ref="addGameFrom" :model="newGamInfo" :rules="rules">
         <el-form-item label="项目名称">
@@ -73,7 +72,6 @@
         <el-button type="primary" @click="confAddGame">确认</el-button>
       </el-form>
     </el-dialog>
-
     <el-dialog title="词库设置" v-model="showWrodSetting">
       <el-form ref="addGameFrom" :model="newGamInfo">
         <el-form-item label="已经加载的词库">
@@ -115,7 +113,6 @@ import { ElMessage }                                             from 'element-p
 export default defineComponent( {
   data() {
     return {
-      offset         : 0,
       total          : 0,
       tbData         : [] as any[],
       date           : [],
@@ -183,8 +180,8 @@ export default defineComponent( {
     moment,
     async queryData() {
       const [ gameInfo, wordInfo ] = await Promise.all( [
-        queryGameList( this.offset, LISTTYPE.game ),
-        queryGameList( this.offset, LISTTYPE.word )
+        queryGameList( LISTTYPE.game ),
+        queryGameList( LISTTYPE.word )
       ] );
       const { data, total } = gameInfo;
       this.tbData = data;
@@ -196,7 +193,6 @@ export default defineComponent( {
           .format( 'YYYY-MM-DD hh:mm:ss' );
     },
     pageChange( page: number ) {
-      this.offset = page * 10;
       this.queryData();
     },
     confAddGame() {
