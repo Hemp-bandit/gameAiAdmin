@@ -4,7 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "release": "npm-run-all build release:cp release:install release:tgz release:dep",
+    "release:cp": "shx cp package.json .env  package-lock.lock docker-compose.yml  $npm_package_name/",
+    "release:install": "cd $npm_package_name && npm install --production",
+    "release:tgz": "tar -zcvf $npm_package_name.tgz $npm_package_name ",
+    "release:dep": "scp $npm_package_name.tgz huawei:/root/project"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -30,6 +35,8 @@
     "babel-plugin-import": "^1.13.3",
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
+    "npm-run-all": "^4.1.5",
+    "shx": "^0.3.3",
     "typescript": "~3.9.3"
   },
   "author": "wyswill"
