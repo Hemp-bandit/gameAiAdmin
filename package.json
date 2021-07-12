@@ -1,15 +1,16 @@
 {
   "name": "gameAiAdmin",
+  "buildName": "gameAiAdminWebServer",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "release": "npm-run-all build release:cp release:install release:tgz release:dep",
-    "release:cp": "shx cp package.json .env  package-lock.lock docker-compose.yml  $npm_package_name/",
-    "release:install": "cd $npm_package_name && npm install --production",
-    "release:tgz": "tar -zcvf $npm_package_name.tgz $npm_package_name ",
-    "release:dep": "scp $npm_package_name.tgz huawei:/root/project"
+    "release:cp": "cp package.json *.lock server.js $npm_package_buildName/",
+    "release:install": "cd $npm_package_buildName  && yarn",
+    "release:tgz": "tar -zcvf $npm_package_buildName.tgz $buildName ",
+    "release:dep": "scp $npm_package_buildName.tgz huawei:/root/project"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -21,7 +22,8 @@
     "normalizecss": "^3.0.0",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
-    "vue-router": "^4.0.0-0"
+    "vue-router": "^4.0.0-0",
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
