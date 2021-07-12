@@ -3,7 +3,7 @@ import { LISTTYPE } from '@/utile/cosnt';
 
 const token = localStorage.getItem( 'jwt' );
 const entity = axios.create( {
-  baseURL: 'http://localhost:3003/gameApi',
+  baseURL: 'http://weita.online/gameApi',
   timeout: 5000,
   headers: {
     Authorization: token || ''
