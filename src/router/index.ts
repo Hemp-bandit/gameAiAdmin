@@ -36,6 +36,17 @@ export const routes: Array<RouteRecordRaw> = [
         component: import('@/views/wordMng.vue')
       }
     ]
+  }, {
+    path     : '/msg',
+    name     : '内容管理',
+    component: import('@/views/layout/layout.vue'),
+    children : [
+      {
+        path     : 'msg',
+        name     : 'msg',
+        component: import('@/views/msg.vue')
+      }
+    ]
   }
 ];
 const router = createRouter( {
