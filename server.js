@@ -20,7 +20,7 @@ app.use(
     index: '/',
   }),
 );
-app.use(`/`, function(req, res) {
+app.use('/', function(req, res) {
   res.sendFile(path.join(__dirname, `./${filePath}/index.html`));
 });
 app.listen(8082, () => {

@@ -1,4 +1,9 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import {
+  createRouter,
+  createWebHashHistory,
+  createWebHistory,
+  RouteRecordRaw
+} from 'vue-router'
 
 const base: Array<RouteRecordRaw> = [
   {
@@ -11,7 +16,7 @@ const base: Array<RouteRecordRaw> = [
     name     : '/',
     component: import('@/views/layout/layout.vue')
   }
-];
+]
 export const routes: Array<RouteRecordRaw> = [
   {
     path     : '/project',
@@ -36,7 +41,8 @@ export const routes: Array<RouteRecordRaw> = [
         component: import('@/views/wordMng.vue')
       }
     ]
-  }, {
+  },
+  {
     path     : '/msg',
     name     : '内容管理',
     component: import('@/views/layout/layout.vue'),
@@ -48,20 +54,20 @@ export const routes: Array<RouteRecordRaw> = [
       }
     ]
   }
-];
+]
 const router = createRouter( {
   history: createWebHistory( process.env.BASE_URL ),
   routes : [ ...base, ...routes ]
-} );
+} )
 
 router.beforeEach( ( to, from, next ) => {
-  const token = localStorage.getItem( 'jwt' );
+  const token = localStorage.getItem( 'jwt' )
   if ( !token && to.fullPath !== '/login' ) {
-    next( { name: 'login' } );
+    next( { name: 'login' } )
   }
   else {
-    next();
+    next()
   }
-} );
+} )
 
-export default router;
+export default router

@@ -1,68 +1,70 @@
 <template>
-  <div class='Login'>
-    <div class='inputs'>
-      <el-form ref='form' :model='form' :rules='rules'>
-        <el-form-item label='用户名'>
-          <el-input v-model='form.username'></el-input>
+  <div class="Login">
+    <div class="inputs">
+      <el-form ref="form" :model="form" :rules="rules">
+        <el-form-item label="用户名">
+          <el-input v-model="form.username"></el-input>
         </el-form-item>
-        <el-form-item label='密码'>
-          <el-input v-model='form.password' :show-password='true' type='password'></el-input>
+        <el-form-item label="密码">
+          <el-input
+            v-model="form.password"
+            :show-password="true"
+            type="password"
+          ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type='primary' @click='handleSubmit'>登陆</el-button>
+          <el-button type="primary" @click="handleSubmit">登陆</el-button>
         </el-form-item>
       </el-form>
-    </div
-    >
+    </div>
   </div>
 </template>
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent } from '@vue/runtime-core';
-import { login }           from '@/utile/api';
-import { ElMessage }       from 'element-plus';
+import { login } from '@/utile/api';
+import { ElMessage } from 'element-plus';
 
-export default defineComponent( {
+export default defineComponent({
   data() {
     return {
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' },
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ]
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' },
+        ],
       },
-      form : {
+      form: {
         username: '',
-        password: ''
-      }
+        password: '',
+      },
     };
   },
   methods: {
     handleSubmit() {
       //@ts-ignore
-      this.$refs.form.validate( async valid => {
-        if ( valid ) {
+      this.$refs.form.validate(async valid => {
+        if (valid) {
           try {
-            const { token } = await login( this.form );
-            localStorage.setItem( 'jwt', token );
-            await this.$router.replace( '/' );
-          } catch ( e ) {
-            ElMessage.error( e.message );
+            const { token } = await login(this.form);
+            localStorage.setItem('jwt', token);
+            await this.$router.replace('/');
+          } catch (e) {
+            ElMessage.error(e.message);
           }
-        }
-        else {
-          console.log( 'error submit!!' );
+        } else {
+          console.log('error submit!!');
           return false;
         }
-      } );
+      });
     },
-  }
-} );
+  },
+});
 </script>
-<style scoped lang='less'>
+<style scoped lang="less">
 .Login {
   width: 100vw;
   height: 100vh;
@@ -75,10 +77,9 @@ export default defineComponent( {
     position: absolute;
     right: 164px;
     top: 35%;
-
   }
 
-  /deep/ .el-form-item {
+  .el-form-item {
     padding: 10px 14px;
   }
 }

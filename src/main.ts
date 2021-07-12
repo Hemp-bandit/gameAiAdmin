@@ -4,7 +4,7 @@ import router from './router';
 import ElementPlus from 'element-plus';
 import 'element-plus/lib/theme-chalk/index.css';
 import 'normalizecss/normalize.css';
-const app = createApp(App);
-app.use(router);
-app.use(ElementPlus);
-app.mount('#app');
+createApp(App)
+  .use(router)
+  .use(ElementPlus)
+  .mount('#app');

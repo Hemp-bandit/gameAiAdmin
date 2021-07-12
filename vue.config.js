@@ -4,10 +4,15 @@ module.exports = {
   outputDir: `${pkg.buildName}/${pkg.name}`,
   css: {
     loaderOptions: {
-      // 向 CSS 相关的 loader 传递选项
       less: {
         javascriptEnabled: true,
       },
+    },
+  },
+  configureWebpack: {
+    //关闭 webpack 的性能提示
+    performance: {
+      hints: false,
     },
   },
 };
