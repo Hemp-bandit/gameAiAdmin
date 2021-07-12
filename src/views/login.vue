@@ -17,8 +17,9 @@
   </div>
 </template>
 <script lang='ts'>
-import { defineComponent } from '@vue/runtime-core'
-import { login }           from '@/utile/api'
+import { defineComponent } from '@vue/runtime-core';
+import { login }           from '@/utile/api';
+import { ElMessage }       from 'element-plus';
 
 export default defineComponent( {
   data() {
@@ -37,25 +38,29 @@ export default defineComponent( {
         username: '',
         password: ''
       }
-    }
+    };
   },
   methods: {
     handleSubmit() {
       //@ts-ignore
       this.$refs.form.validate( async valid => {
         if ( valid ) {
-          const { token } = await login( this.form )
-          localStorage.setItem( 'token', token )
-          await this.$router.replace( '/' )
+          try {
+            const { token } = await login( this.form );
+            localStorage.setItem( 'token', token );
+            await this.$router.replace( '/' );
+          } catch ( e ) {
+            ElMessage.error( e.message );
+          }
         }
         else {
-          console.log( 'error submit!!' )
-          return false
+          console.log( 'error submit!!' );
+          return false;
         }
-      } )
-    }
+      } );
+    },
   }
-} )
+} );
 </script>
 <style scoped lang='less'>
 .Login {
@@ -69,7 +74,7 @@ export default defineComponent( {
     background: #fff;
     position: absolute;
     right: 164px;
-    top: 45%;
+    top: 35%;
 
   }
 

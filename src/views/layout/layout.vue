@@ -2,55 +2,59 @@
   <el-container>
     <el-aside width="200px">
       <el-menu
-        @select="handleSelect"
-        background-color="#545c64"
-        style="height: 100%;"
-        text-color="#fff"
-        :default-active="active"
-        active-text-color="#ffd04b"
+          @select="handleSelect"
+          background-color="#545c64"
+          style="height: 100%;"
+          text-color="#fff"
+          :default-active="active"
+          active-text-color="#ffd04b"
       >
-        <el-submenu
-          v-for="(ele, index) in routes"
-          :key="index"
-          :index="ele.path"
-        >
-          <template #title>{{ ele.name }}</template>
+        <div class="menus" v-for="(ele, index) in routes" :key="index">
+          <el-submenu :index="ele.path" v-if="ele.children.length>1">
+            <template #title>{{ele.name}}</template>
+            <el-menu-item
+                v-for="(el, indd) in ele.children"
+                :index="`${ele.path}/${el.path}`"
+                :key="indd"
+            >
+              {{el.name}}
+            </el-menu-item>
+          </el-submenu>
           <el-menu-item
-            v-for="(el, indd) in ele.children"
-            :index="`${ele.path}/${el.path}`"
-            :key="indd"
+              v-else
+              :index="`${ele.path}/${ele.children[0].path}`"
           >
-            {{ el.name }}
+            {{ele.name}}
           </el-menu-item>
-        </el-submenu>
+        </div>
       </el-menu>
     </el-aside>
     <el-container>
       <el-main>
-        <router-view />
+        <router-view/>
       </el-main>
     </el-container>
   </el-container>
 </template>
 <script lang="ts">
-import { routes } from '@/router';
+import { routes }          from '@/router';
 import { defineComponent } from '@vue/runtime-core';
 
-export default defineComponent({
+export default defineComponent( {
   data() {
     return {
       breadcrumbArr: [] as string[],
       routes,
-      active: this.$route.fullPath,
+      active       : this.$route.fullPath
     };
   },
   mounted() {},
   methods: {
-    handleSelect(data: string) {
-      this.$router.push(data);
-    },
-  },
-});
+    handleSelect( data: string ) {
+      this.$router.replace( { path: data } );
+    }
+  }
+} );
 </script>
 
 <style lang="less">
