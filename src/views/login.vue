@@ -51,7 +51,9 @@ export default defineComponent({
           try {
             const { token } = await login(this.form);
             localStorage.setItem('jwt', token);
-            await this.$router.replace('/');
+            setTimeout(() => {
+              this.$router.replace('/');
+            }, 200);
           } catch (e) {
             ElMessage.error(e.message);
           }
