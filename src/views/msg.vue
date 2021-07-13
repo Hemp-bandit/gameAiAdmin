@@ -51,18 +51,35 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item>
+          <el-button>重置</el-button>
+          <el-button>搜索</el-button>
+        </el-form-item>
       </el-form>
     </div>
     <el-table :data="dataList">
       <el-table-column prop="content" label="文本内容" />
-      <el-table-column prop="wordType" label="文本类型" />
-      <el-table-column prop="wordType" label="命中类型" />
-      <el-table-column prop="wordType" label="审核依据" />
-      <el-table-column prop="wordType" label="用户id" />
-      <el-table-column prop="wordType" label="处理结果" />
+      <el-table-column label="文本类型">
+        <template #default="scoped">
+          {{ conveType(scoped.row.type, 'word') }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="ip" label="ip" />
+      <el-table-column label="命中类型">
+        <template #default="scoped">
+          {{ conveType(scoped.row.checkType, 'ckt') }}
+        </template>
+      </el-table-column>
+      <el-table-column label="审核依据">
+        <template #default="scoped">
+          {{ conveType(scoped.row.checkResult, 'chr') }}
+        </template></el-table-column
+      >
+      <el-table-column prop="gameUserId" label="角色id" />
+      <el-table-column prop="result" label="处理结果" />
       <el-table-column label="操作">
         <template #default>
-          <el-select v-model="optRes">
+          <el-select>
             <el-option
               v-for="(ele, index) in msgOpt"
               :key="index"
@@ -78,8 +95,8 @@
 
 <script lang="ts">
 import { queryMsgList } from '@/utile/api';
+import { CHECKRESULT, CHECKTYPE, WORDTYPES } from '@/utile/cosnt';
 import { defineComponent } from '@vue/runtime-core';
-import { AxiosError } from 'axios';
 import { ElMessage } from 'element-plus';
 //@ts-ignore
 import vueIp from 'ip-input-vue';
@@ -129,6 +146,16 @@ export default defineComponent({
         this.dataList = data;
       } catch (error) {
         ElMessage.error(error.message);
+      }
+    },
+    conveType(row: string, tp: 'word' | 'ckt' | 'chr') {
+      switch (tp) {
+        case 'word':
+          return WORDTYPES[Number(row)];
+        case 'ckt':
+          return CHECKTYPE[Number(row)];
+        case 'chr':
+          return CHECKRESULT[Number(row)];
       }
     },
   },
