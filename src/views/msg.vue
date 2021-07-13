@@ -66,7 +66,6 @@
       </el-table-column>
       <el-table-column prop="ip" label="ip" />
       <el-table-column prop="result" label="命中类型" />
-
       <el-table-column prop="result" label="审核依据">
         <template #default="scoped">
           {{ conveType(scoped.row.checkType, 'ckt') }}
@@ -90,7 +89,7 @@
               label: 'name',
             }"
             :clearable="true"
-            @change="handChange"
+            @change="handChange(scope.row, scope.$index)"
           ></el-cascader>
           <el-button type="primary" size="mini">确认修改</el-button>
         </template>
@@ -106,7 +105,7 @@ import { defineComponent } from '@vue/runtime-core';
 import { ElMessage } from 'element-plus';
 //@ts-ignore
 import vueIp from 'ip-input-vue';
-
+import _ from 'lodash';
 export default defineComponent({
   components: { vueIp },
   data() {
@@ -164,18 +163,32 @@ export default defineComponent({
     async queryWord() {
       try {
         let { data } = await queryGameList(LISTTYPE.word);
-        const opt = [{ name: '通过' }];
-        data = data.concat(opt);
+        const opt = [{ name: '通过' }].concat(data);
         this.dataList = this.dataList.map(ele => {
-          Reflect.set(ele, 'opts', data);
+          Reflect.set(ele, 'opts', opt);
           return ele;
         });
       } catch (error) {
         ElMessage.error(error.message);
       }
     },
-    handChange(value: any) {
-      console.log(value);
+    handChange({ opt, opts }: any, index: number) {
+      const fltOpt = _.flatten(opt);
+      if (fltOpt.includes('通过')) {
+        //@ts-ignore
+        this.dataList[index].opt = [['通过']];
+        let i = 1;
+        while (i < opts.length) {
+          Reflect.set(opts[i], 'disabled', true);
+          i++;
+        }
+      } else {
+        let i = 1;
+        while (i < opts.length) {
+          Reflect.set(opts[i], 'disabled', false);
+          i++;
+        }
+      }
     },
   },
 });
