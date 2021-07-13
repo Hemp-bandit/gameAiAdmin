@@ -6,9 +6,9 @@
   "scripts"        :{
     "dev"            :"vue-cli-service serve",
     "build"          :"vue-cli-service build",
-    "release"        :"npm-run-all build release:cp release:install ",
+    "release"        :"npm-run-all build release:cp release:install release:tgz release:dep",
     "release:cp"     :"cp *.json server.js $npm_package_buildName/",
-    "release:install":"cd $npm_package_buildName  &&  npm i ",
+    "release:install":"cd $npm_package_buildName  &&  npm i connect-history-api-fallback express",
     "release:tgz"    :"tar -zcvf $npm_package_buildName.tgz $npm_package_buildName ",
     "release:dep"    :"scp $npm_package_buildName.tgz huawei:/root/project"
   },
