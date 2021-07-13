@@ -57,7 +57,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-table :data="dataList">
+    <el-table :data="dataList" height="600">
       <el-table-column prop="content" label="文本内容" />
       <el-table-column label="文本类型">
         <template #default="scoped">
@@ -195,19 +195,26 @@ export default defineComponent({
     async changeMsg(scop: any) {
       const { opt } = scop;
       const fltOpt = _.flatten(opt);
+      Reflect.deleteProperty(scop, 'opt');
+      Reflect.deleteProperty(scop, 'opts');
       if (fltOpt.includes('通过')) {
         scop.checkType = '1';
-        scop.checkResults = '0';
+        scop.checkResult = '0';
         scop.result = `人工审核通过`;
-        Reflect.deleteProperty(scop, 'opt');
-        Reflect.deleteProperty(scop, 'opts');
-        try {
-          const { msg } = await updateMsg(scop);
-          ElMessage.success(msg);
-          await this.queryData();
-        } catch (error) {
-          ElMessage.error(error.message);
-        }
+      } else {
+        scop.checkType = '2';
+        scop.checkResult = '1';
+        scop.result = `词库 ${fltOpt.join(' | ')} 审核不通过`;
+      }
+
+      // console.log(JSON.stringify(scop, null, 2));
+
+      try {
+        const { msg } = await updateMsg(scop);
+        ElMessage.success(msg);
+        await this.queryData();
+      } catch (error) {
+        ElMessage.error(error.message);
       }
     },
   },
