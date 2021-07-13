@@ -91,7 +91,9 @@
             :clearable="true"
             @change="handChange(scope.row, scope.$index)"
           ></el-cascader>
-          <el-button type="primary" size="mini">确认修改</el-button>
+          <el-button type="primary" size="mini" @click="changeMsg(scope.row)"
+            >确认修改</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -99,7 +101,7 @@
 </template>
 
 <script lang="ts">
-import { queryGameList, queryMsgList } from '@/utile/api';
+import { queryGameList, queryMsgList, updateMsg } from '@/utile/api';
 import { CHECKRESULT, CHECKTYPE, LISTTYPE, WORDTYPES } from '@/utile/cosnt';
 import { defineComponent } from '@vue/runtime-core';
 import { ElMessage } from 'element-plus';
@@ -187,6 +189,24 @@ export default defineComponent({
         while (i < opts.length) {
           Reflect.set(opts[i], 'disabled', false);
           i++;
+        }
+      }
+    },
+    async changeMsg(scop: any) {
+      const { opt } = scop;
+      const fltOpt = _.flatten(opt);
+      if (fltOpt.includes('通过')) {
+        scop.checkType = '1';
+        scop.checkResults = '0';
+        scop.result = `人工审核通过`;
+        Reflect.deleteProperty(scop, 'opt');
+        Reflect.deleteProperty(scop, 'opts');
+        try {
+          const { msg } = await updateMsg(scop);
+          ElMessage.success(msg);
+          await this.queryData();
+        } catch (error) {
+          ElMessage.error(error.message);
         }
       }
     },

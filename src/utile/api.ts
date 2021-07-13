@@ -2,7 +2,7 @@ import axios from 'axios';
 import { LISTTYPE } from '@/utile/cosnt';
 
 const entity = axios.create({
-  baseURL: 'http://weita.online/gameApi',
+  baseURL: 'http://localhost:3004/gameApi', //'http://weita.online/gameApi',
   timeout: 5000,
 });
 
@@ -64,4 +64,8 @@ export async function updateWord(data: any): Promise<baseRsp> {
 
 export async function queryMsgList(params: any) {
   return await entity.post('msg/searchMsg', params);
+}
+
+export async function updateMsg(params: any): Promise<baseRsp> {
+  return await entity.post('/msg/updateMsg', { msg: params });
 }
