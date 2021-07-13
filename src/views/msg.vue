@@ -6,12 +6,12 @@
           <el-input v-model="searchOpt.content" />
         </el-form-item>
         <el-form-item label="文本类型">
-          <el-select v-model="searchOpt.wordType">
+          <el-select v-model="searchOpt.type">
             <el-option
               v-for="(ele, index) in wordTypes"
               :key="index"
               :label="ele.name"
-              :value="ele.name"
+              :value="ele.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -21,7 +21,7 @@
               v-for="(ele, index) in checkType"
               :key="index"
               :label="ele.name"
-              :value="ele.name"
+              :value="ele.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -47,7 +47,7 @@
               v-for="(ele, index) in checkResults"
               :key="index"
               :label="ele.name"
-              :value="ele.name"
+              :value="ele.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -65,6 +65,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="ip" label="ip" />
+      <el-table-column prop="gameName" label="游戏名称" />
       <el-table-column prop="result" label="命中类型" />
       <el-table-column prop="result" label="审核依据">
         <template #default="scoped">
@@ -105,17 +106,16 @@ import { queryGameList, queryMsgList, updateMsg } from '@/utile/api';
 import { CHECKRESULT, CHECKTYPE, LISTTYPE, WORDTYPES } from '@/utile/cosnt';
 import { defineComponent } from '@vue/runtime-core';
 import { ElMessage } from 'element-plus';
-//@ts-ignore
-import vueIp from 'ip-input-vue';
-import _ from 'lodash';
 
+import _ from 'lodash';
+import vueIp from '@/components/ip.vue';
 export default defineComponent({
   components: { vueIp },
   data() {
     return {
       searchOpt: {
         content: '',
-        wordType: '',
+        type: '',
         date: '',
         ip: '',
         gameUserId: '',
@@ -124,13 +124,15 @@ export default defineComponent({
       },
       wordTypes: [{ name: '聊天', value: '0' }],
       checkType: [
+        { name: '全部', value: undefined },
         { name: 'ai', value: '0' },
         { name: '人工', value: '1' },
         { name: '词库', value: '2' },
       ],
       checkResults: [
-        { name: '成功', value: '0' },
-        { name: '失败', value: '1' },
+        { name: '全部', value: undefined },
+        { name: '通过', value: '0' },
+        { name: '拦截', value: '1' },
       ],
       dataList: [],
       optRes: '',
@@ -219,9 +221,31 @@ export default defineComponent({
       }
     },
     async searchMsg() {
-      try {
-        const {} = this;
-      } catch (e) {}
+      const { searchOpt } = this;
+      if (searchOpt.ip !== '') {
+        if (searchOpt.ip.split('.').includes('')) {
+          ElMessage.warning('ip 不正确');
+          return;
+        }
+      }
+
+      if (searchOpt.date !== '' && _.isArray(searchOpt.date)) {
+        const [startTime, endTime] = searchOpt.date;
+        Reflect.set(searchOpt, 'startTime', new Date(startTime).getTime());
+        Reflect.set(searchOpt, 'endTime', new Date(endTime).getTime());
+        Reflect.deleteProperty(searchOpt, 'date');
+      }
+
+      const keys = Object.keys(searchOpt);
+      const req = {};
+      keys.forEach(key => {
+        //@ts-ignore
+        if (searchOpt[key] !== '') {
+          //@ts-ignore
+          req[key] = searchOpt[key];
+        }
+      });
+      await this.queryData(req);
     },
   },
 });
