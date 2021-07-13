@@ -52,8 +52,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button>重置</el-button>
-          <el-button>搜索</el-button>
+          <el-button type="info">重置</el-button>
+          <el-button type="primary">搜索</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -65,28 +65,34 @@
         </template>
       </el-table-column>
       <el-table-column prop="ip" label="ip" />
-      <el-table-column label="命中类型">
+      <el-table-column prop="result" label="命中类型" />
+
+      <el-table-column prop="result" label="审核依据">
         <template #default="scoped">
           {{ conveType(scoped.row.checkType, 'ckt') }}
         </template>
       </el-table-column>
-      <el-table-column label="审核依据">
+      <el-table-column prop="gameUserId" label="角色id" />
+      <el-table-column label="处理结果">
         <template #default="scoped">
           {{ conveType(scoped.row.checkResult, 'chr') }}
-        </template></el-table-column
-      >
-      <el-table-column prop="gameUserId" label="角色id" />
-      <el-table-column prop="result" label="处理结果" />
+        </template>
+      </el-table-column>
       <el-table-column label="操作">
-        <template #default>
-          <el-select>
-            <el-option
-              v-for="(ele, index) in msgOpt"
-              :key="index"
-              :label="ele.name"
-              :value="ele.name"
-            ></el-option>
-          </el-select>
+        <template #default="scope">
+          <el-cascader
+            v-model="scope.row.opt"
+            :options="scope.row.opts"
+            :props="{
+              checkStrictly: false,
+              multiple: true,
+              value: 'name',
+              label: 'name',
+            }"
+            :clearable="true"
+            @change="handChange"
+          ></el-cascader>
+          <el-button type="primary" size="mini">确认修改</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -94,8 +100,8 @@
 </template>
 
 <script lang="ts">
-import { queryMsgList } from '@/utile/api';
-import { CHECKRESULT, CHECKTYPE, WORDTYPES } from '@/utile/cosnt';
+import { queryGameList, queryMsgList } from '@/utile/api';
+import { CHECKRESULT, CHECKTYPE, LISTTYPE, WORDTYPES } from '@/utile/cosnt';
 import { defineComponent } from '@vue/runtime-core';
 import { ElMessage } from 'element-plus';
 //@ts-ignore
@@ -103,7 +109,6 @@ import vueIp from 'ip-input-vue';
 
 export default defineComponent({
   components: { vueIp },
-  name: 'msg',
   data() {
     return {
       searchOpt: {
@@ -126,15 +131,13 @@ export default defineComponent({
         { name: '失败', value: '1' },
       ],
       dataList: [],
-      msgOpt: [
-        { name: '成功', value: '0' },
-        { name: '失败', value: '1' },
-      ],
       optRes: '',
     };
   },
   mounted() {
-    this.queryData();
+    this.queryData().then(() => {
+      this.queryWord();
+    });
   },
   methods: {
     onIpChange(ip: string) {
@@ -157,6 +160,22 @@ export default defineComponent({
         case 'chr':
           return CHECKRESULT[Number(row)];
       }
+    },
+    async queryWord() {
+      try {
+        let { data } = await queryGameList(LISTTYPE.word);
+        const opt = [{ name: '通过' }];
+        data = data.concat(opt);
+        this.dataList = this.dataList.map(ele => {
+          Reflect.set(ele, 'opts', data);
+          return ele;
+        });
+      } catch (error) {
+        ElMessage.error(error.message);
+      }
+    },
+    handChange(value: any) {
+      console.log(value);
     },
   },
 });
